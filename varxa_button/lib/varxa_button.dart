@@ -1,6 +1,7 @@
 library varxa_button;
 
 import 'dart:html';
+import 'dart:async';
 import 'package:angular/angular.dart';
 
 typedef void ClickHandler(VarxaButton btn);
@@ -24,16 +25,11 @@ class VarxaButton implements ShadowRootAware, AttachAware {
 
   String progressStyle;
   Function onClick;
-
+  
+  bool inProgress = false;
+  
   VarxaButton(this._scope, this._rootElem) {
     this._rootElem.onClick.listen((e) {
-      this._progress.classes.remove('noprogress');
-      this._rootElem.classes.add('state-loading');
-
-      if (this.onClick == null) {
-        print('WTF');
-      }
-
       ClickHandler clickHandler = this.onClick();
       clickHandler(this);
     });
@@ -59,28 +55,44 @@ class VarxaButton implements ShadowRootAware, AttachAware {
     this._progressInner = shadowRoot.querySelector('.progress-inner');
   }
 
-  void setProgress({num percent}) {
-    switch (this.progressStyle) {
-      case STYLE_PERCENT:
-        if (percent == null) {
-          throw 'must specify percent when progress type is percent.';
-        }
-        break;
-      case STYLE_CONTINUOUS:
-        if (percent != null) {
-          throw 'percent should not be supplied when progress style is continuous.';
-        }
-        break;
-      default:
-        throw 'unexpected style value';
+  void setProgress(double percent) {
+    
+    if(!inProgress){
+      throw 'you must call startProgress() before calling setProgress()';
     }
-
-    this._progressInner.style.width = '$percent%';
+    
+    if(percent < 0.0 || percent > 1.0) {
+      throw 'percent must between 0.0 and 1.0';
+    }
+    
+    if(this.progressStyle != STYLE_PERCENT) {
+      throw 'setProgress should only be called when progress-style is "$STYLE_PERCENT"';
+    }
+    
+    this._progressInner.style.width = '${percent * 100.0}%';
   }
-
+  
+  void startProgress() {
+    this._withoutTransition(() {
+      this._progressInner.style.width = '0';
+      this._progress.style.opacity = '1';
+    });
+    this.inProgress = true;
+  }
+  
   void stopProgress() {
-    // original has this being done in setTimeout.  If/why is that necessary?
-    this._progress.style.opacity = '0';
-    this._rootElem.classes.remove('state-loading');
+    // call asynchronously after 300ms to ensure that
+    // the width transition completes from the last
+    // call to setProgress()
+    new Timer(new Duration(milliseconds: 300), (){
+      this._progress.style.opacity = '0';
+      this.inProgress = false;
+    });
+  }
+  
+  void _withoutTransition(Function func){
+    this._rootElem.style.transition = 'none !important';
+    func();
+    this._rootElem.style.transition = '';
   }
 }

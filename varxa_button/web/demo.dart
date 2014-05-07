@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math' as math;
 import 'package:angular/application_factory.dart';
 import 'package:angular/angular.dart';
 import 'package:di/di.dart';
@@ -17,7 +19,23 @@ class DemoModule extends Module {
 @Controller(publishAs: 'ctrl', selector: '[main]')
 class DemoController {
   void handleClick(VarxaButton sender) {
-    print('button pressed!');
-    sender.setProgress(percent: 50);
+    if(sender.inProgress){
+      print('progress stopped');
+      sender.stopProgress();
+    }else{
+      print('starting progress');
+      sender.startProgress();
+      final rand = new math.Random();
+      var progress = 0.0;
+      new Timer.periodic(new Duration(milliseconds: 200), (Timer timer){
+        progress = math.min(progress + rand.nextDouble() * .1, 1.0);
+        sender.setProgress(progress);
+        if(progress == 1.0){
+          print('done!');
+          timer.cancel();
+          sender.stopProgress();
+        }
+      });
+    }
   }
 }
