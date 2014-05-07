@@ -1,3 +1,12 @@
+@keyframes animate-continuous {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .progress-button {
 	position: relative;
 	display: inline-block;
@@ -22,8 +31,8 @@
 	display: block;
 }
 
-.progress-button .content::before,
-.progress-button .content::after  {
+.progress-button .content:before,
+.progress-button .content:after  {
 	position: absolute;
 	right: 20px;
 	color: #0e7138;
@@ -36,7 +45,7 @@
 	margin-left: 25px;
 }
 
-.progress-button .content::before {
+.progress-button .content:before {
 	content: "\e600"; /* Checkmark for success */
 }
 
@@ -44,8 +53,8 @@
 	content: "\e601"; /* Cross for error */
 }
 
-.progress-button.state-success .content::before,
-.progress-button.state-error .content::after {
+.progress-button.state-success .content:before,
+.progress-button.state-error .content:after {
 	opacity: 1;
 }
 
@@ -62,6 +71,12 @@
 	height: 6px;
 	top: 0;
 	width: 0;
+	-webkit-transition: width 0.3s, opacity 0.3s;
+	transition: width 0.3s, opacity 0.3s;
+}
+
+.progress-button.style-percent .progress-inner {
+    width: 0;
 	-webkit-transition: width 0.3s, opacity 0.3s;
 	transition: width 0.3s, opacity 0.3s;
 }

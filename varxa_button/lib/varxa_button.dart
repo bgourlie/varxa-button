@@ -14,19 +14,61 @@ typedef void ClickHandler(VarxaButton btn);
       'on-click': '&onClick',
       'progress-style': '@progressStyle'
     })
-class VarxaButton implements ShadowRootAware, AttachAware {
+class VarxaButton implements ShadowRootAware {
   static const String STYLE_PERCENT = 'percent';
   static const String STYLE_CONTINUOUS = 'continuous';
 
   final Element _rootElem;
   final Scope _scope;
+  
+  ButtonElement _buttonElem;
   Element _progress;
   Element _progressInner;
 
-  String progressStyle;
+  String _progressStyle;
+  String get progressStyle => _progressStyle;
+  
+  set progressStyle(String style){
+    this._progressStyle = style;
+    
+    if (this._buttonElem == null){
+      return;
+    }
+    
+    if (style == null) {
+      style = STYLE_CONTINUOUS;
+    }
+
+    switch (style) {
+      case STYLE_PERCENT:
+        this._buttonElem.classes.add('style-percent');
+        this._buttonElem.classes.remove('style-continuous');
+        break;
+      case STYLE_CONTINUOUS:
+        this._buttonElem.classes.add('style-continuous');
+        this._buttonElem.classes.remove('style-percent');
+        break;
+      default:
+        this._progressStyle = null;
+        throw 'unexpected style value';
+    }
+  }
+  
   Function onClick;
   
-  bool inProgress = false;
+  bool _inProgress = false;
+  
+  bool get inProgress => _inProgress;
+  
+  set inProgress(bool value) {
+    this._inProgress = value;
+    if(value){
+      this._buttonElem.classes.add('in-progress');
+    }else{
+      this._buttonElem.classes.remove('in-progress');
+    }
+  }
+  
   
   VarxaButton(this._scope, this._rootElem) {
     this._rootElem.onClick.listen((e) {
@@ -35,26 +77,15 @@ class VarxaButton implements ShadowRootAware, AttachAware {
     });
   }
 
-  void attach() {
-    if (this.progressStyle == null) {
-      this.progressStyle = STYLE_CONTINUOUS;
-    }
-
-    switch (this.progressStyle) {
-      case STYLE_PERCENT:
-        break;
-      case STYLE_CONTINUOUS:
-        break;
-      default:
-        throw 'unexpected style value';
-    }
-  }
-
   void onShadowRoot(ShadowRoot shadowRoot) {
+    this._buttonElem = shadowRoot.querySelector('.progress-button');
     this._progress = shadowRoot.querySelector('.progress');
     this._progressInner = shadowRoot.querySelector('.progress-inner');
+    
+    // slight hack to re-evaluate setter logic once our elements have been set.
+    this.progressStyle = this.progressStyle;
   }
-
+  
   void setProgress(double percent) {
     
     if(!inProgress){
@@ -73,10 +104,8 @@ class VarxaButton implements ShadowRootAware, AttachAware {
   }
   
   void startProgress() {
-    this._withoutTransition(() {
-      this._progressInner.style.width = '0';
-      this._progress.style.opacity = '1';
-    });
+    this._progressInner.style.width = '0';
+    this._progress.style.opacity = '1';
     this.inProgress = true;
   }
   
@@ -88,11 +117,5 @@ class VarxaButton implements ShadowRootAware, AttachAware {
       this._progress.style.opacity = '0';
       this.inProgress = false;
     });
-  }
-  
-  void _withoutTransition(Function func){
-    this._rootElem.style.transition = 'none !important';
-    func();
-    this._rootElem.style.transition = '';
   }
 }
