@@ -6,7 +6,9 @@ import 'package:di/di.dart';
 import 'package:varxa_ui/varxa_ui.dart';
 
 void main() {
-  applicationFactory().addModule(new DemoModule()).run();
+  applicationFactory()
+  .addModule(new VarxaUiModule())
+  .addModule(new DemoModule()).run();
 }
 
 class DemoModule extends Module {

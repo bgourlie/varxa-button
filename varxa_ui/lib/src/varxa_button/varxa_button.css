@@ -7,7 +7,7 @@
     opacity: 1;
   }
 }
-.progress-button {
+button {
   position: relative;
   display: inline-block;
   padding: 0 60px;
@@ -19,17 +19,22 @@
   letter-spacing: 1px;
   font-size: 1em;
   line-height: 4;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.progress-button[disabled],
-.progress-button[disabled].in-progress {
+button[disabled],
+button[disabled].in-progress {
   cursor: default;
 }
-.progress-button .content {
+button.checked {
+  background: #156b39;
+}
+button content {
   position: relative;
   display: block;
 }
-.progress-button .content:before,
-.progress-button .content:after {
+button content:before,
+button content:after {
   position: absolute;
   right: 20px;
   color: #0e7138;
@@ -41,25 +46,25 @@
   left: 100%;
   margin-left: 25px;
 }
-.progress-button .content:before {
+button content:before {
   content: "\e600";
   /* Checkmark for success */
 }
-.progress-button .content:after {
+button content:after {
   content: "\e601";
   /* Cross for error */
 }
-.progress-button.state-success .content:before,
-.progress-button.state-error .content:after {
+button.state-success .content:before,
+button.state-error .content:after {
   opacity: 1;
 }
-.progress-button .progress {
+button .progress {
   background: #148544;
   -webkit-transition: opacity 0.3s 0.3s;
   transition: opacity 0.3s 0.3s;
   opacity: 0;
 }
-.progress-button .progress .progress-inner {
+button .progress .progress-inner {
   position: absolute;
   left: 0;
   background: #0e7138;
@@ -67,12 +72,12 @@
   top: 0;
   width: 0;
 }
-.progress-button.style-percent .progress-inner {
+button.style-percent .progress-inner {
   width: 0;
   -webkit-transition: width 0.3s, opacity 0.3s;
   transition: width 0.3s, opacity 0.3s;
 }
-.progress-button.style-continuous .progress-inner {
+button.style-continuous .progress-inner {
   width: 100%;
   -webkit-animation-duration: 1s;
   -webkit-animation-name: animate-continuous;

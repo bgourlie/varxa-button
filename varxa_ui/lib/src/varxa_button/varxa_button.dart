@@ -16,14 +16,19 @@ class VarxaButton implements ShadowRootAware {
 
   final Element _rootElem;
   final Scope _scope;
-  
+  final VarxaButtonGroup _buttonGroup;
+
   ButtonElement _buttonElem;
   Element _progress;
   Element _progressInner;
 
   String _progressStyle;
+  bool _inProgress = false;
+  bool _checked = false;
+
+  Function onClick;
+
   String get progressStyle => _progressStyle;
-  
   set progressStyle(String style){
     this._progressStyle = style;
     
@@ -49,13 +54,8 @@ class VarxaButton implements ShadowRootAware {
         throw 'unexpected style value';
     }
   }
-  
-  Function onClick;
-  
-  bool _inProgress = false;
-  
+
   bool get inProgress => _inProgress;
-  
   set inProgress(bool value) {
     this._inProgress = value;
     if(value){
@@ -64,17 +64,41 @@ class VarxaButton implements ShadowRootAware {
       this._buttonElem.classes.remove('in-progress');
     }
   }
-  
-  
-  VarxaButton(this._scope, this._rootElem) {
+
+  bool get checked => _checked;
+  set checked(bool value){
+    this._checked = value;
+    if(value){
+      this._buttonElem.classes.add('checked');
+    }else{
+      this._buttonElem.classes.remove('checked');
+    }
+  }
+
+  VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
+
+    if(this._buttonGroup != null){
+      this._buttonGroup._buttons.add(this);
+    }
+
     this._rootElem.onClick.listen((e) {
       ClickHandler clickHandler = this.onClick();
-      clickHandler(this);
+
+      if(clickHandler != null){
+        clickHandler(this);
+      }
+    });
+
+    // TODO: probably need something else for touchscreens
+    this._rootElem.onMouseDown.listen((e){
+      if(this._buttonGroup != null){
+        this._buttonGroup._registerMouseDown(this);
+      }
     });
   }
 
   void onShadowRoot(ShadowRoot shadowRoot) {
-    this._buttonElem = shadowRoot.querySelector('.progress-button');
+    this._buttonElem = shadowRoot.querySelector('button');
     this._progress = shadowRoot.querySelector('.progress');
     this._progressInner = shadowRoot.querySelector('.progress-inner');
     

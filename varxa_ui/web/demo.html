@@ -7,7 +7,22 @@
   </head>
   <body>
     <div main>
-      <varxa-button on-click="ctrl.handleClick" progress-style="continuous">Awesome!</varxa-button>
+      <varxa-button on-click="ctrl.handleClick" progress-style="continuous">Continuous Progress</varxa-button>
+      <varxa-button on-click="ctrl.handleClick" progress-style="percent">Percent Progress</varxa-button>
+
+      <h2>Progress Group (check)</h2>
+      <div type="check" varxa-button-group>
+          <varxa-button>Tab One</varxa-button>
+          <varxa-button>Tab Two</varxa-button>
+          <varxa-button>Tab Three</varxa-button>
+      </div>
+
+        <h2>Progress Group (radio)</h2>
+        <div type="radio" varxa-button-group>
+            <varxa-button>Tab One</varxa-button>
+            <varxa-button>Tab Two</varxa-button>
+            <varxa-button>Tab Three</varxa-button>
+        </div>
     </div>
     <script type="application/dart" src="demo.dart"></script>
     <script src="packages/browser/dart.js"></script>
