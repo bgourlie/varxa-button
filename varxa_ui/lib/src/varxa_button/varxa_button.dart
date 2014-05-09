@@ -1,15 +1,11 @@
-library varxa_button;
-
-import 'dart:html';
-import 'dart:async';
-import 'package:angular/angular.dart';
+part of varxa_ui;
 
 typedef void ClickHandler(VarxaButton btn);
 
 @Component(
     selector: 'varxa-button', 
-    templateUrl: 'packages/varxa_button/varxa_button.html', 
-    cssUrl: 'packages/varxa_button/varxa_button.css', 
+    templateUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.html',
+    cssUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.css',
     map: const {
       'on-click': '&onClick',
       'progress-style': '@progressStyle'
@@ -104,7 +100,10 @@ class VarxaButton implements ShadowRootAware {
   }
   
   void startProgress() {
-    this._progressInner.style.width = '0';
+    if(this.progressStyle == 'percent'){
+      this._progressInner.style.width = '0';
+    }
+
     this._progress.style.opacity = '1';
     this.inProgress = true;
   }

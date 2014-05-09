@@ -1,4 +1,4 @@
-name: varxa_button
+name: varxa_ui
 description: A button component using the angular framework.
 dependencies:
   angular: any
