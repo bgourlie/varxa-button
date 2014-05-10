@@ -3,3 +3,6 @@ description: A button component using the angular framework.
 dependencies:
   angular: any
   browser: any
+dev_dependencies:
+  guinness: any
+  unittest: any

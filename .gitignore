@@ -2,3 +2,4 @@ pubspec.lock
 packages/
 varxa_ui/.idea/
 varxa_button/.idea/dictionaries/William.xml
+varxa_ui/node_modules/
