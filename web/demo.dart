@@ -14,7 +14,6 @@ void main() {
 class DemoModule extends Module {
   DemoModule() {
     bind(DemoController);
-    bind(VarxaButton);
   }
 }
 

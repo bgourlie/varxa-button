@@ -9,6 +9,7 @@ part 'src/varxa_button_group/varxa_button_group.dart';
 
 class VarxaUiModule extends Module {
   VarxaUiModule(){
+    bind(VarxaButton);
     bind(VarxaButtonGroup, toValue: null);
   }
 }
