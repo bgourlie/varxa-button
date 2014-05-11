@@ -72,7 +72,16 @@ class VarxaButton implements ShadowRootAware {
 
   bool get checked => _checked;
   set checked(bool value){
+    if(value == null){
+      value = false;
+    }
+    
     this._checked = value;
+    
+    if(this._buttonElem == null){
+      return;
+    }
+    
     if(value){
       this._buttonElem.classes.add('checked');
     }else{
