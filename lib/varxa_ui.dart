@@ -2,7 +2,8 @@ library varxa_ui;
 
 import 'dart:html';
 import 'dart:async';
-import 'package:angular/angular.dart';
+import 'package:angular/angular.dart' hide Injectable;
+import 'package:di/annotations.dart';
 import 'package:logging/logging.dart';
 
 part 'src/varxa_button/varxa_button.dart';

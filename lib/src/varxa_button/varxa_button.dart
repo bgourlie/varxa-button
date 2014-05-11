@@ -1,5 +1,6 @@
 part of varxa_ui;
 
+@Injectable()
 @Component(
     selector: 'varxa-button', 
     templateUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.html',

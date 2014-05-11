@@ -1,5 +1,6 @@
 part of varxa_ui;
 
+@Injectable()
 @Decorator(
   selector: '[varxa-button-group]',
   visibility: Directive.DIRECT_CHILDREN_VISIBILITY,
