@@ -7,7 +7,8 @@ part of varxa_ui;
     cssUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.css',
     map: const {
       'progress' : '=>progress',
-      'progress-style': '@progressStyle'
+      'progress-style': '@progressStyle',
+      'checked' : '=>checked'
     })
 class VarxaButton implements ShadowRootAware {
   static const String STYLE_PERCENT = 'percent';
@@ -102,6 +103,7 @@ class VarxaButton implements ShadowRootAware {
     // hack to re-evaluate setter logic once our elements have been set.
     this.progressStyle = this.progressStyle;
     this.progress = this.progress;
+    this.checked = this.checked;
   }
   
   void _setProgress(double percent) {
