@@ -4,10 +4,10 @@ part of varxa_ui;
 @Decorator(
   selector: '[varxa-button-group]',
   visibility: Directive.DIRECT_CHILDREN_VISIBILITY,
-  map: const {'type' : '@type'}
+  map: const {'mode' : '@mode'}
 )
 class VarxaButtonGroup {
-  String type;
+  String mode;
   final _buttons = new Set<VarxaButton>();
 
   void _registerMouseDown(VarxaButton btn){
@@ -15,7 +15,7 @@ class VarxaButtonGroup {
       throw 'button not part of group';
     }
 
-    switch(this.type != null ? this.type : 'radio'){
+    switch(this.mode != null ? this.mode : 'radio'){
       case 'check':
       btn.checked = !btn.checked;
     break;
