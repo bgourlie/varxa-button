@@ -76,7 +76,8 @@ class VarxaButton implements ShadowRootAware {
   }
 
   VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
-
+    _logger.finest('VarxaButton init.');
+    
     if(this._buttonGroup != null){
       this._buttonGroup._buttons.add(this);
     }
