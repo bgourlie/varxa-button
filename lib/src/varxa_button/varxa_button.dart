@@ -1,13 +1,11 @@
 part of varxa_ui;
 
-typedef void ClickHandler(VarxaButton btn);
-
 @Component(
     selector: 'varxa-button', 
     templateUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.html',
     cssUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.css',
     map: const {
-      'on-click': '&onClick',
+      'progress' : '=>progress',
       'progress-style': '@progressStyle'
     })
 class VarxaButton implements ShadowRootAware {
@@ -19,12 +17,12 @@ class VarxaButton implements ShadowRootAware {
   final VarxaButtonGroup _buttonGroup;
 
   ButtonElement _buttonElem;
-  Element _progress;
-  Element _progressInner;
+  Element _progressElem;
+  Element _progressInnerElem;
 
   String _progressStyle;
-  bool _inProgress = false;
   bool _checked = false;
+  double _progress = 0.0;
 
   Function onClick;
 
@@ -55,14 +53,19 @@ class VarxaButton implements ShadowRootAware {
     }
   }
 
-  bool get inProgress => _inProgress;
-  set inProgress(bool value) {
-    this._inProgress = value;
-    if(value){
-      this._buttonElem.classes.add('in-progress');
-    }else{
-      this._buttonElem.classes.remove('in-progress');
+  double get progress => _progress;
+  set progress(double value) {
+    if(value == null){
+      value = 0.0;
     }
+    
+    _logger.finest('progress set to $value');
+    
+    if(this._progress == value || this._buttonElem == null){
+      return;
+    }
+
+    this._setProgress(value);
   }
 
   bool get checked => _checked;
@@ -76,19 +79,11 @@ class VarxaButton implements ShadowRootAware {
   }
 
   VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
-    _logger.finest('VarxaButton init.');
+    _logger.finest('VarxaButton init');
     
     if(this._buttonGroup != null){
       this._buttonGroup._buttons.add(this);
     }
-
-    this._rootElem.onClick.listen((e) {
-      ClickHandler clickHandler = this.onClick();
-
-      if(clickHandler != null){
-        clickHandler(this);
-      }
-    });
 
     // TODO: probably need something else for touchscreens
     this._rootElem.onMouseDown.listen((e){
@@ -100,46 +95,61 @@ class VarxaButton implements ShadowRootAware {
 
   void onShadowRoot(ShadowRoot shadowRoot) {
     this._buttonElem = shadowRoot.querySelector('button');
-    this._progress = shadowRoot.querySelector('.progress');
-    this._progressInner = shadowRoot.querySelector('.progress-inner');
+    this._progressElem = shadowRoot.querySelector('.progress');
+    this._progressInnerElem = shadowRoot.querySelector('.progress-inner');
     
-    // slight hack to re-evaluate setter logic once our elements have been set.
+    // hack to re-evaluate setter logic once our elements have been set.
     this.progressStyle = this.progressStyle;
+    this.progress = this.progress;
   }
   
-  void setProgress(double percent) {
-    
-    if(!inProgress){
-      throw 'you must call startProgress() before calling setProgress()';
-    }
-    
+  void _setProgress(double percent) {
     if(percent < 0.0 || percent > 1.0) {
       throw 'percent must between 0.0 and 1.0';
     }
-    
-    if(this.progressStyle != STYLE_PERCENT) {
-      throw 'setProgress should only be called when progress-style is "$STYLE_PERCENT"';
+        
+    switch(this.progressStyle){
+      case STYLE_CONTINUOUS:
+        if(percent > 0){
+          this._startProgress();
+        }else{
+          this._stopProgress();
+        }
+        break;
+      case STYLE_PERCENT:
+        if(this.progress == 0.0 && percent > 0.0){
+          this._startProgress();
+        }
+        
+        this._progressInnerElem.style.width = '${percent * 100.0}%';
+        
+        if(percent == 1.0){
+          this._stopProgress();
+        }
+        break;
     }
     
-    this._progressInner.style.width = '${percent * 100.0}%';
+    this._progress = percent;
   }
   
-  void startProgress() {
+  void _startProgress() {
+    _logger.finest('progress started');
+    this._buttonElem.classes.add('in-progress');
     if(this.progressStyle == 'percent'){
-      this._progressInner.style.width = '0';
+      this._progressInnerElem.style.width = '0';
     }
 
-    this._progress.style.opacity = '1';
-    this.inProgress = true;
+    this._progressElem.style.opacity = '1';
   }
   
-  void stopProgress() {
+  void _stopProgress() {
+    _logger.finest('progress stopped');
     // call asynchronously after 300ms to ensure that
     // the width transition completes from the last
     // call to setProgress()
+    this._buttonElem.classes.remove('in-progress');
     new Timer(new Duration(milliseconds: 300), (){
-      this._progress.style.opacity = '0';
-      this.inProgress = false;
+      this._progressElem.style.opacity = '0';
     });
   }
 }

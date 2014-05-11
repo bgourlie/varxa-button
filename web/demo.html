@@ -7,8 +7,8 @@
   </head>
   <body>
     <div main>
-      <varxa-button on-click="ctrl.handleClick" progress-style="continuous">Continuous Progress</varxa-button>
-      <varxa-button on-click="ctrl.handleClick" progress-style="percent">Percent Progress</varxa-button>
+      <varxa-button ng-click="ctrl.continuousButtonClick()" progress-style="continuous" progress="ctrl.continuousButtonProgress">Continuous Progress</varxa-button>
+      <varxa-button ng-click="ctrl.percentButtonClick()" progress-style="percent" progress="ctrl.percentButtonProgress">Percent Progress</varxa-button>
 
       <h2>Progress Group (check)</h2>
       <div type="check" varxa-button-group>

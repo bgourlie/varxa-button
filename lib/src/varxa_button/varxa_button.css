@@ -39,7 +39,6 @@ button content:after {
   position: absolute;
   right: 20px;
   color: #0e7138;
-  font-family: "icomoon";
   opacity: 0;
   -webkit-transition: opacity 0.3s 0.3s;
   transition: opacity 0.3s 0.3s;
