@@ -7,12 +7,12 @@ import 'package:varxa_ui/varxa_ui.dart';
 
 void main() {
   applicationFactory()
-  .addModule(new VarxaUiModule())
   .addModule(new DemoModule()).run();
 }
 
 class DemoModule extends Module {
   DemoModule() {
+    install(new VarxaUiModule());
     bind(DemoController);
   }
 }
