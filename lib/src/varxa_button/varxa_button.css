@@ -30,6 +30,9 @@ button[disabled].in-progress {
 button.checked {
   background: #156b39;
 }
+button.closable {
+  /* TODO */
+}
 button content {
   position: relative;
   display: block;

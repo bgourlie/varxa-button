@@ -8,6 +8,7 @@ part of varxa_ui;
     map: const {
       'progress' : '=>progress',
       'progress-style': '@progressStyle',
+      'closable': '=>isClosable',
       'checked' : '=>checked'
     })
 class VarxaButton implements ShadowRootAware {
@@ -24,6 +25,7 @@ class VarxaButton implements ShadowRootAware {
 
   String _progressStyle;
   bool _checked = false;
+  bool _isClosable;
   double _progress = 0.0;
 
   Function onClick;
@@ -89,6 +91,21 @@ class VarxaButton implements ShadowRootAware {
     }
   }
 
+  bool get isClosable => _isClosable;
+  set isClosable(bool value){
+    if(value == null){
+      value = false;
+    }
+    
+    _isClosable = value;
+    
+    if(this._buttonElem != null) {
+      _isClosable 
+        ? this._buttonElem.classes.add('closable') 
+        : this._buttonElem.classes.remove('closable');
+    }
+  }
+  
   VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
     _logger.finest('VarxaButton init');
     
@@ -113,6 +130,7 @@ class VarxaButton implements ShadowRootAware {
     this.progressStyle = this.progressStyle;
     this.progress = this.progress;
     this.checked = this.checked;
+    this.isClosable = this.isClosable;
   }
   
   void _setProgress(double percent) {
