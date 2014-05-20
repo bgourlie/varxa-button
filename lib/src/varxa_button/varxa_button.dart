@@ -1,11 +1,14 @@
 part of varxa_ui;
 
+typedef CloseClickedHandler(VarxaButton sender);
+
 @Injectable()
 @Component(
     selector: 'varxa-button', 
     templateUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.html',
     cssUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.css',
     map: const {
+      'tag' : '=>!tag',
       'progress' : '=>progress',
       'progress-style': '@progressStyle',
       'closable': '=>isClosable',
@@ -25,6 +28,7 @@ class VarxaButton implements ShadowRootAware {
   Element _progressInnerElem;
   Element _closer;
 
+  dynamic tag;
   String _progressStyle;
   bool _checked = false;
   bool _isClosable;
@@ -110,17 +114,10 @@ class VarxaButton implements ShadowRootAware {
   
   VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
     _logger.finest('VarxaButton init');
-    
+
     if(this._buttonGroup != null){
       this._buttonGroup._buttons.add(this);
     }
-
-    // TODO: probably need something else for touchscreens
-    this._rootElem.onMouseDown.listen((e){
-      if(this._buttonGroup != null){
-        this._buttonGroup._registerMouseDown(this);
-      }
-    });
   }
 
   void onShadowRoot(ShadowRoot shadowRoot) {
@@ -129,12 +126,24 @@ class VarxaButton implements ShadowRootAware {
     this._progressInnerElem = shadowRoot.querySelector('.progress-inner');
     this._closer = shadowRoot.querySelector('.closer');
 
-    this._closer.onClick.listen((e) {
+    // TODO: probably need something else for touchscreens
+    this._buttonElem.onMouseDown.listen((Event e){
+      _logger.finest('button elem click');
+      if(this._buttonGroup != null){
+        this._buttonGroup._registerMouseDown(this);
+      }
+    });
+
+    this._closer.onMouseDown.listen((Event e) {
+      _logger.finest('close elem click');
+      e.stopPropagation();
+
       if(this.onCloseClicked == null){
         return;
       }
 
-      this.onCloseClicked();
+      CloseClickedHandler handler = this.onCloseClicked();
+      handler(this);
     });
 
     // hack to re-evaluate setter logic once our elements have been set.
@@ -143,7 +152,7 @@ class VarxaButton implements ShadowRootAware {
     this.checked = this.checked;
     this.isClosable = this.isClosable;
   }
-  
+
   void _setProgress(double percent) {
     if(percent < 0.0 || percent > 1.0) {
       throw 'percent must between 0.0 and 1.0';
