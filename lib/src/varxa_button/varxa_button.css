@@ -30,8 +30,26 @@ button[disabled].in-progress {
 button.checked {
   background: #156b39;
 }
-button.closable {
-  /* TODO */
+button.closable .closer {
+  display: inline;
+}
+button .closer {
+  display: none;
+  color: #b3b3b3;
+  height: 23px;
+  width: 23px;
+}
+button .closer:hover {
+  color: #d9d9d9;
+}
+button .closer:after {
+  content: "\2716";
+  text-indent: 0;
+  display: block;
+  position: absolute;
+  top: -3px;
+  right: 10px;
+  font-size: 18px;
 }
 button content {
   position: relative;

@@ -19,7 +19,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 1em;
-  line-height: 4;
+  line-height: 3;
   -webkit-user-select: none;
   user-select: none;
 
@@ -33,7 +33,30 @@ button {
   }
 
   &.closable {
-    /* TODO */
+    .closer{
+      display: inline;
+    }
+  }
+
+  .closer {
+    display: none;
+    color:  darken(#fff, 30%);
+    height: 23px;
+    width: 23px;
+
+    &:hover{
+      color: darken(#fff, 15%);
+    }
+
+    &:after{
+      content: "\2716";
+      text-indent: 0;
+      display: block;
+      position: absolute;
+      top: -3px;
+      right: 10px;
+      font-size: 18px;
+    }
   }
 
   content {
