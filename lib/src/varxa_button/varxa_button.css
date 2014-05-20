@@ -19,7 +19,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 1em;
-  line-height: 4;
+  line-height: 3;
   -webkit-user-select: none;
   user-select: none;
 }
