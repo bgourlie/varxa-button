@@ -9,7 +9,8 @@ part of varxa_ui;
       'progress' : '=>progress',
       'progress-style': '@progressStyle',
       'closable': '=>isClosable',
-      'checked' : '=>checked'
+      'checked' : '=>checked',
+      'on-close-clicked' : '&onCloseClicked'
     })
 class VarxaButton implements ShadowRootAware {
   static const String STYLE_PERCENT = 'percent';
@@ -22,13 +23,14 @@ class VarxaButton implements ShadowRootAware {
   ButtonElement _buttonElem;
   Element _progressElem;
   Element _progressInnerElem;
+  Element _closer;
 
   String _progressStyle;
   bool _checked = false;
   bool _isClosable;
   double _progress = 0.0;
 
-  Function onClick;
+  Function onCloseClicked;
 
   String get progressStyle => _progressStyle;
   set progressStyle(String style){
@@ -125,7 +127,16 @@ class VarxaButton implements ShadowRootAware {
     this._buttonElem = shadowRoot.querySelector('button');
     this._progressElem = shadowRoot.querySelector('.progress');
     this._progressInnerElem = shadowRoot.querySelector('.progress-inner');
-    
+    this._closer = shadowRoot.querySelector('.closer');
+
+    this._closer.onClick.listen((e) {
+      if(this.onCloseClicked == null){
+        return;
+      }
+
+      this.onCloseClicked();
+    });
+
     // hack to re-evaluate setter logic once our elements have been set.
     this.progressStyle = this.progressStyle;
     this.progress = this.progress;

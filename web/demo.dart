@@ -24,7 +24,6 @@ class DemoModule extends Module {
 @Controller(publishAs: 'ctrl', selector: '[main]')
 class DemoController {
   final Scope _scope;
-  
   DemoController(this._scope);
   
   double percentButtonProgress = 0.0;
@@ -34,6 +33,10 @@ class DemoController {
     this.continuousButtonProgress = this.continuousButtonProgress == 0.0
       ? 1.0
       : 0.0;
+  }
+
+  void closeClicked(){
+    print('close clicked!');
   }
 
   void percentButtonClick(){
