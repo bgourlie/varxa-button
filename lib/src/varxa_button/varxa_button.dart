@@ -136,10 +136,6 @@ class VarxaButton implements ShadowRootAware {
       }
     });
     
-    var content = shadowRoot.querySelector('#whole');
-    
-    content.onClick.listen((e) => print('content clicked'));
-    
     this._closer.onClick.listen((Event e) {
       _logger.finest('close elem click');
       e.stopPropagation();
