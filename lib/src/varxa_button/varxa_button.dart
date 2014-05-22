@@ -136,14 +136,7 @@ class VarxaButton implements ShadowRootAware {
       }
     });
     
-    this._closer.onClick.listen((Event e) {
-      _logger.finest('close elem click');
-      e.stopPropagation();
-
-      if(this.onCloseClick != null){
-        this.onCloseClick();
-      }
-    });
+    this._closer.onClick.listen(_closeClickHandler);
 
     // hack to re-evaluate setter logic once our elements have been set.
     this.progressStyle = this.progressStyle;
@@ -152,6 +145,15 @@ class VarxaButton implements ShadowRootAware {
     this.isClosable = this.isClosable;
   }
 
+  void _closeClickHandler(Event e){
+    _logger.finest('close elem click');
+    e.stopPropagation();
+
+    if(this.onCloseClick != null){
+      this.onCloseClick();
+    }
+  }
+  
   void _setProgress(double percent) {
     if(percent < 0.0 || percent > 1.0) {
       throw 'percent must between 0.0 and 1.0';
