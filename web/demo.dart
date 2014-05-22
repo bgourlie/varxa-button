@@ -35,7 +35,7 @@ class DemoController {
       : 0.0;
   }
 
-  void closeClicked(VarxaButton sender){
+  void closeClicked(){
     print('close clicked!');
   }
 

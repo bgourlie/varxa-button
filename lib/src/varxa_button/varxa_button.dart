@@ -1,14 +1,11 @@
 part of varxa_ui;
 
-typedef CloseClickedHandler(VarxaButton sender);
-
 @Injectable()
 @Component(
     selector: 'varxa-button', 
     templateUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.html',
     cssUrl: 'packages/varxa_ui/src/varxa_button/varxa_button.css',
     map: const {
-      'tag' : '=>!tag',
       'progress' : '=>progress',
       'progress-style': '@progressStyle',
       'closable': '=>isClosable',
@@ -28,7 +25,6 @@ class VarxaButton implements ShadowRootAware {
   Element _progressInnerElem;
   Element _closer;
 
-  dynamic tag;
   String _progressStyle;
   bool _checked = false;
   bool _isClosable;
@@ -142,8 +138,7 @@ class VarxaButton implements ShadowRootAware {
         return;
       }
 
-      CloseClickedHandler handler = this.onCloseClicked();
-      handler(this);
+      this.onCloseClicked();
     });
 
     // hack to re-evaluate setter logic once our elements have been set.
