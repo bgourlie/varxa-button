@@ -10,7 +10,8 @@ part of varxa_ui;
       'progress-style': '@progressStyle',
       'closable': '=>isClosable',
       'checked' : '=>checked',
-      'on-close-clicked' : '&onCloseClicked'
+      'vb-click' : '&onClick',
+      'vb-close-click' : '&onCloseClick'
     })
 class VarxaButton implements ShadowRootAware {
   static const String STYLE_PERCENT = 'percent';
@@ -30,8 +31,9 @@ class VarxaButton implements ShadowRootAware {
   bool _isClosable;
   double _progress = 0.0;
 
-  Function onCloseClicked;
-
+  Function onClick;
+  Function onCloseClick;
+  
   String get progressStyle => _progressStyle;
   set progressStyle(String style){
     this._progressStyle = style;
@@ -123,22 +125,28 @@ class VarxaButton implements ShadowRootAware {
     this._closer = shadowRoot.querySelector('.closer');
 
     // TODO: probably need something else for touchscreens
-    this._buttonElem.onMouseDown.listen((Event e){
+    this._buttonElem.onClick.listen((Event e){
       _logger.finest('button elem click');
       if(this._buttonGroup != null){
         this._buttonGroup._registerMouseDown(this);
       }
+      
+      if(this.onClick != null){
+        this.onClick();
+      }
     });
-
-    this._closer.onMouseDown.listen((Event e) {
+    
+    var content = shadowRoot.querySelector('#whole');
+    
+    content.onClick.listen((e) => print('content clicked'));
+    
+    this._closer.onClick.listen((Event e) {
       _logger.finest('close elem click');
       e.stopPropagation();
 
-      if(this.onCloseClicked == null){
-        return;
+      if(this.onCloseClick != null){
+        this.onCloseClick();
       }
-
-      this.onCloseClicked();
     });
 
     // hack to re-evaluate setter logic once our elements have been set.

@@ -35,6 +35,10 @@ class DemoController {
       : 0.0;
   }
 
+  void onClick(){
+    print('normal click!');
+  }
+  
   void closeClicked(){
     print('close clicked!');
   }

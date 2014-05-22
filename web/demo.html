@@ -26,9 +26,9 @@
       
       <h2>Progress Group (radio, closable)</h2>
       <div mode="radio" varxa-button-group>
-          <varxa-button closable="true" on-close-clicked="ctrl.closeClicked()">Tab One</varxa-button>
-          <varxa-button closable="true" on-close-clicked="ctrl.closeClicked()">Tab Two</varxa-button>
-          <varxa-button closable="true" on-close-clicked="ctrl.closeClicked()" checked="true">Tab Three</varxa-button>
+          <varxa-button closable="true" vb-click="ctrl.onClick()" vb-close-clicked="ctrl.closeClicked()">Tab One</varxa-button>
+          <varxa-button closable="true" vb-click="ctrl.onClick()" vb-close-clicked="ctrl.closeClicked()">Tab Two</varxa-button>
+          <varxa-button closable="true" vb-click="ctrl.onClick()" vb-close-clicked="ctrl.closeClicked()" checked="true">Tab Three</varxa-button>
       </div>
       
       <h2>Progress Group (radio) using ng-repeat (ANGULAR REPRO)</h2>
