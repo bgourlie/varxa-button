@@ -10,8 +10,8 @@ part of varxa_ui;
       'progress-style': '@progressStyle',
       'closable': '=>isClosable',
       'checked' : '=>checked',
-      'vb-click' : '&onClick',
-      'vb-close-click' : '&onCloseClick'
+      'vx-click' : '&onClick',
+      'vx-close-click' : '&onCloseClick'
     })
 class VarxaButton implements ShadowRootAware {
   static const String STYLE_PERCENT = 'percent';
@@ -111,8 +111,6 @@ class VarxaButton implements ShadowRootAware {
   }
   
   VarxaButton(this._scope, this._rootElem, this._buttonGroup) {
-    _logger.finest('VarxaButton init');
-
     if(this._buttonGroup != null){
       this._buttonGroup._buttons.add(this);
     }
@@ -125,8 +123,7 @@ class VarxaButton implements ShadowRootAware {
     this._closer = shadowRoot.querySelector('.closer');
 
     // TODO: probably need something else for touchscreens
-    this._buttonElem.onClick.listen((Event e){
-      _logger.finest('button elem click');
+    this._rootElem.onClick.listen((Event e){
       if(this._buttonGroup != null){
         this._buttonGroup._registerMouseDown(this);
       }
@@ -146,7 +143,6 @@ class VarxaButton implements ShadowRootAware {
   }
 
   void _closeClickHandler(Event e){
-    _logger.finest('close elem click');
     e.stopPropagation();
 
     if(this.onCloseClick != null){
