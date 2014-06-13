@@ -30,7 +30,8 @@ class VarxaButton implements ShadowRootAware {
   bool _checked = false;
   bool _isClosable;
   double _progress = 0.0;
-
+  double _initialProgress;
+  
   Function onClick;
   Function onCloseClick;
   
@@ -62,18 +63,47 @@ class VarxaButton implements ShadowRootAware {
   }
 
   double get progress => _progress;
-  set progress(double value) {
-    if(value == null){
-      value = 0.0;
-    }
+  set progress(double newProgress) {
     
-    _logger.finest('progress set to $value');
-    
-    if(this._progress == value || this._buttonElem == null){
+    if(this._buttonElem == null){
+      this._initialProgress = newProgress;
       return;
     }
+    
+    if(newProgress == null){
+      newProgress = 0.0;
+    }
+    
+    if(newProgress < 0.0 || newProgress > 1.0) {
+      throw 'percent must between 0.0 and 1.0';
+    }
+    
+    if(_progress == newProgress){
+      return;
+    }
+                   
+    switch(this.progressStyle){
+      case STYLE_CONTINUOUS:
+        if(newProgress > 0){
+          this._startProgress();
+        }else{
+          this._stopProgress();
+        }
+        break;
+      case STYLE_PERCENT:
+        if(this.progress == 0.0 && newProgress > 0.0){
+          this._startProgress();
+        }
+        
+        this._progressInnerElem.style.width = '${newProgress * 100.0}%';
+        
+        if(newProgress == 1.0){
+          this._stopProgress();
+        }
+        break;
+    }
 
-    this._setProgress(value);
+    this._progress = newProgress;
   }
 
   bool get checked => _checked;
@@ -137,7 +167,7 @@ class VarxaButton implements ShadowRootAware {
 
     // hack to re-evaluate setter logic once our elements have been set.
     this.progressStyle = this.progressStyle;
-    this.progress = this.progress;
+    this.progress = this._initialProgress;
     this.checked = this.checked;
     this.isClosable = this.isClosable;
   }
@@ -149,36 +179,7 @@ class VarxaButton implements ShadowRootAware {
       this.onCloseClick();
     }
   }
-  
-  void _setProgress(double percent) {
-    if(percent < 0.0 || percent > 1.0) {
-      throw 'percent must between 0.0 and 1.0';
-    }
-        
-    switch(this.progressStyle){
-      case STYLE_CONTINUOUS:
-        if(percent > 0){
-          this._startProgress();
-        }else{
-          this._stopProgress();
-        }
-        break;
-      case STYLE_PERCENT:
-        if(this.progress == 0.0 && percent > 0.0){
-          this._startProgress();
-        }
-        
-        this._progressInnerElem.style.width = '${percent * 100.0}%';
-        
-        if(percent == 1.0){
-          this._stopProgress();
-        }
-        break;
-    }
-    
-    this._progress = percent;
-  }
-  
+
   void _startProgress() {
     _logger.finest('progress started');
     this._buttonElem.classes.add('in-progress');
